@@ -1,9 +1,10 @@
-import pygame
 import math
 
-from pygame import K_RIGHT
+import pygame
+from pygame import K_SPACE
 
 from player.player_sprite import Player
+# from obstacles.yellow_laser import YellowLaser as YellowLaser ---> needs to be fixed
 
 pygame.init()
 
@@ -12,10 +13,13 @@ FPS = 60
 
 SCREEN_WIDTH = 900
 SCREEN_HEIGHT = 600
+player_top_left_x = 100
+player_top_left_y = 385
+scroll_bg_const = 5
 
 # create game window
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Endless Scroll")
+pygame.display.set_caption("Jetpack Joyride")
 
 # load image
 bg = pygame.image.load(
@@ -30,16 +34,17 @@ tiles = math.ceil(SCREEN_WIDTH / bg_width) + 1
 screen.blit(bg, (0, 0))
 # Creating the sprites and groups
 moving_sprites = pygame.sprite.Group()
-player = Player(100, 400)
+player = Player(player_top_left_x, player_top_left_y)
 moving_sprites.add(player)
+# yellow laser
+# laser_sprites = pygame.sprite.Group()
+# yellow_laser = YellowLaser()              ---> needs to be fixed
+# laser_sprites.add(yellow_laser)
 # game loop
 run = True
 while run:
-    # clock.tick(FPS)
-
     k = pygame.key.get_pressed()
-    # if k[K_RIGHT]:
-    #     # draw scrolling background
+
     #     for i in range(0, tiles):
     #         screen.blit(bg, (i * bg_width + scroll, 0))
     #         # bg_rect.x = i * bg_width + scroll
@@ -52,17 +57,25 @@ while run:
     #     if abs(scroll) > bg_width:
     #         scroll = 0
 
-
-
-
     # draw scrolling background
+
     for i in range(0, tiles):
         screen.blit(bg, (i * bg_width + scroll, 0))
-        # bg_rect.x = i * bg_width + scroll
-        # pygame.draw.rect(screen, (255, 0, 0), bg_rect, 1)
+
+    # player control + animations
+
+    if player.rect.topleft[1] >= player_top_left_y:
+        player.run()
+    if k[K_SPACE]:
+        player.fly()
+        player.rect.topleft = [player.rect.topleft[0], player.rect.topleft[1] - 7]
+    if player.rect.topleft[1] < player_top_left_y and not k[K_SPACE]:
+        if player.rect.topleft[1] <= player_top_left_y:
+            player.rect.topleft = [player.rect.topleft[0], player.rect.topleft[1] + 7]
+            player.fall()
 
     # scroll background
-    scroll -= 5
+    scroll -= scroll_bg_const
 
     # reset scroll
     if abs(scroll) > bg_width:
@@ -72,16 +85,16 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-        if event.type == pygame.KEYDOWN:
-            player.attack()
+        # if event.type == pygame.KEYDOWN:
+            # player.run()
 
-    pygame.display.update()
+    # pygame.display.update()
     # Drawing
     # screen.fill((0, 0, 0))
     moving_sprites.draw(screen)
-    moving_sprites.update(0.25)
+    moving_sprites.update(0.2)
     pygame.display.flip()
-    clock.tick(60)
+    clock.tick(FPS)
 
 pygame.quit()
 
