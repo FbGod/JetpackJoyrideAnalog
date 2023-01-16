@@ -1,10 +1,13 @@
 import math
+import os
+import random
 
 import pygame
 from pygame import K_SPACE
 
 from player.player_sprite import Player
-# from obstacles.yellow_laser import YellowLaser as YellowLaser ---> needs to be fixed
+from obstacles.yellow_laser import YellowLaser as YellowLaser
+
 
 pygame.init()
 
@@ -16,14 +19,18 @@ SCREEN_HEIGHT = 600
 player_top_left_x = 100
 player_top_left_y = 385
 scroll_bg_const = 5
+laser_sprites_upd_const = 5
 
 # create game window
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Jetpack Joyride")
 
 # load image
-bg = pygame.image.load(
-    "C:\\Users\\PC\\PycharmProjects\\JetpackJoyride\\assets\\background\\4hurq0y5yms11.jpg").convert()
+print(os.path.abspath(os.curdir))
+os.chdir("..")
+print(os.path.abspath(os.curdir))
+
+bg = pygame.image.load("assets/background/4hurq0y5yms11.jpg").convert()
 bg = pygame.transform.scale(bg, (900, 600))
 bg_width = bg.get_width()
 # bg_rect = bg.get_rect()
@@ -36,10 +43,19 @@ screen.blit(bg, (0, 0))
 moving_sprites = pygame.sprite.Group()
 player = Player(player_top_left_x, player_top_left_y)
 moving_sprites.add(player)
+laser_sprites = pygame.sprite.Group()
+
 # yellow laser
-# laser_sprites = pygame.sprite.Group()
-# yellow_laser = YellowLaser()              ---> needs to be fixed
-# laser_sprites.add(yellow_laser)
+for i in range(5):
+    yellow_laser = YellowLaser(SCREEN_WIDTH, SCREEN_HEIGHT, scroll_bg_const)
+    flag = False
+    for sprite in laser_sprites:
+        col = pygame.sprite.collide_rect(sprite, yellow_laser)
+        if col:
+            flag = True
+    if not flag:
+        laser_sprites.add(yellow_laser)
+
 # game loop
 run = True
 while run:
@@ -56,6 +72,9 @@ while run:
     #     # reset scroll
     #     if abs(scroll) > bg_width:
     #         scroll = 0
+    # for i in range(len(laser_sprites)):
+    #     for j in range(i + 1, len(laser_sprites)):
+    #         if laser_sprites[i]
 
     # draw scrolling background
 
@@ -64,15 +83,25 @@ while run:
 
     # player control + animations
 
-    if player.rect.topleft[1] >= player_top_left_y:
+    if player.rect.topleft[1] >= player_top_left_y and not player.is_dead:
         player.run()
-    if k[K_SPACE]:
+    if k[K_SPACE] and player.rect.topleft[1] > 0 and not player.is_dead:
         player.fly()
         player.rect.topleft = [player.rect.topleft[0], player.rect.topleft[1] - 7]
-    if player.rect.topleft[1] < player_top_left_y and not k[K_SPACE]:
+    if player.rect.topleft[1] < player_top_left_y and not k[K_SPACE] and not player.is_dead:
         if player.rect.topleft[1] <= player_top_left_y:
-            player.rect.topleft = [player.rect.topleft[0], player.rect.topleft[1] + 7]
+            player.rect.topleft = [player.rect.topleft[0], player.rect.topleft[1] + 6]
             player.fall()
+    for s in laser_sprites:
+        if pygame.sprite.collide_mask(s, player):
+            player.dead()
+    if player.is_dead:
+        if player.rect.topleft[1] < player_top_left_y + 50:
+            player.rect.topleft = [player.rect.topleft[0], player.rect.topleft[1] + 6]
+        player.end()
+        scroll_bg_const = 0
+        laser_sprites_upd_const = 0
+
 
     # scroll background
     scroll -= scroll_bg_const
@@ -93,6 +122,8 @@ while run:
     # screen.fill((0, 0, 0))
     moving_sprites.draw(screen)
     moving_sprites.update(0.2)
+    laser_sprites.draw(screen)
+    laser_sprites.update(laser_sprites_upd_const)
     pygame.display.flip()
     clock.tick(FPS)
 
