@@ -1,53 +1,55 @@
-import os
-# import pygame
-# import player.player_sprite
-#
-# pygame.init()
-#
-# SCREEN_WIDTH = 500
-# SCREEN_HEIGHT = 500
-#
-# screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-# pygame.display.set_caption('Spritesheets')
-#
-# sprite_sheet_image = pygame.image.load('C:\\Users\\PC\\PycharmProjects\\JetpackJoyride\\assets\\SMS_Adv_Idle_strip4.png').convert_alpha()
-# sprite_sheet = player.player_sprite.SpriteSheet(sprite_sheet_image)
-#
-# BG = (50, 50, 50)
-# BLACK = (0, 0, 0)
-#
-# frame_0 = sprite_sheet.get_image(0, 24, 24, 3, BLACK)
-# frame_1 = sprite_sheet.get_image(1, 24, 24, 3, BLACK)
-# frame_2 = sprite_sheet.get_image(2, 24, 24, 3, BLACK)
-# frame_3 = sprite_sheet.get_image(3, 24, 24, 3, BLACK)
-#
-# run = True
-# while run:
-#
-#     # update background
-#     screen.fill(BG)
-#
-#     # show frame image
-#     screen.blit(frame_0, (0, 0))
-#     screen.blit(frame_1, (72, 0))
-#     screen.blit(frame_2, (150, 0))
-#     screen.blit(frame_3, (250, 0))
-#
-#     # event handler
-#     for event in pygame.event.get():
-#         if event.type == pygame.QUIT:
-#             run = False
-#
-#     pygame.display.update()
-#
-# pygame.quit()
-# path = "C:/Users/PC/PycharmProjects/JetpackJoyride/assets/background/4hurq0y5yms11.jpg"
-# start = "C:/Users/PC/PycharmProjects/JetpackJoyride/level_run/level.py"
-# relative_path = os.path.relpath(path, start)
-#
-# print(relative_path)
+import pygame, sys
 
-from pathlib import Path
-path = Path("assets", "background", "4hurq0y5yms11.jpg")
-## выведем значение переменной path:
-print(str(path))
+
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.Surface((40, 40))
+        self.image.fill('red')
+        self.rect = self.image.get_rect(center=(300, 300))
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def update(self):
+        if pygame.mouse.get_pos():
+            self.rect.center = pygame.mouse.get_pos()
+
+
+class Obstacle(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load('C:\\Users\\PC\\PycharmProjects\\JetpackJoyride\\assets\\obstacles\\zap3.png').convert_alpha()
+        self.rect = self.image.get_rect(center=(400, 400))
+        self.mask = pygame.mask.from_surface(self.image)
+
+
+# pygame setup
+pygame.init()
+screen = pygame.display.set_mode((800, 800))
+clock = pygame.time.Clock()
+
+# group setup
+player = pygame.sprite.GroupSingle(Player())
+obstacle = pygame.sprite.GroupSingle(Obstacle())
+
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    screen.fill('white')
+
+    # updating and drawing
+    player.update()
+    player.draw(screen)
+    obstacle.draw(screen)
+
+    # collision
+    if pygame.sprite.spritecollide(player.sprite, obstacle, False):
+        if pygame.sprite.spritecollide(player.sprite, obstacle, False, pygame.sprite.collide_mask):
+            player.sprite.image.fill('green')
+        else:
+            player.sprite.image.fill('red')
+
+    pygame.display.update()
+    clock.tick(60)

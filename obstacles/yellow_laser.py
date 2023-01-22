@@ -27,21 +27,6 @@ class YellowLaser(pygame.sprite.Sprite):
         # вычисляем маску для эффективного сравнения
         self.mask = pygame.mask.from_surface(self.image)
 
-    # def run(self):
-    #     self.run_animation = True
-    #     self.fly_animation = False
-    #     self.fall_animation = False
-    #
-    # def fly(self):
-    #     self.fly_animation = True
-    #     self.run_animation = False
-    #     self.fall_animation = False
-    #
-    # def fall(self):
-    #     self.fly_animation = False
-    #     self.run_animation = False
-    #     self.fall_animation = True
-    #
     def update(self, speed):
         self.rect.x -= speed
         if self.rect.right < 0:
