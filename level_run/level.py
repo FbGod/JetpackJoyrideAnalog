@@ -155,6 +155,8 @@ def start_screen():
 
 
 def result_screen():
+    save_data()
+    print('Data saved')
     pygame.init()
     global money_count, run
     font = pygame.font.Font('assets/New_Athletic_M54.ttf', 50)
@@ -167,16 +169,14 @@ def result_screen():
     text1 = font.render(f'Total money is {int(data["Money"]) + money_count}', True,
         white)
     textRect1 = text.get_rect()
-    textRect1.center = (420, 320)
+    textRect1.center = (390, 320)
     screen.blit(text1, textRect1)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                save_data()
                 terminate()
-            elif event.type == pygame.KEYUP or \
-                    event.type == pygame.MOUSEBUTTONDOWN:
-                save_data()
+            # elif event.type == pygame.KEYUP or \
+            #         event.type == pygame.MOUSEBUTTONDOWN:
         pygame.display.flip()
         clock.tick(FPS)
 
