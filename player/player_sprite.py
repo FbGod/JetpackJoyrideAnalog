@@ -113,34 +113,3 @@ class Player(pygame.sprite.Sprite):
             self.image = self.sprites_end[int(self.current_sprite)]
             self.mask = pygame.mask.from_surface(self.image)
 
-
-
-# # General setup
-# pygame.init()
-# clock = pygame.time.Clock()
-#
-# # Game Screen
-# screen_width = 900
-# screen_height = 600
-# screen = pygame.display.set_mode((screen_width, screen_height))
-# pygame.display.set_caption("Sprite Animation")
-#
-# # Creating the sprites and groups
-# moving_sprites = pygame.sprite.Group()
-# player = Player(100, 500)
-# moving_sprites.add(player)
-#
-# while True:
-#     for event in pygame.event.get():
-#         if event.type == pygame.QUIT:
-#             pygame.quit()
-#             sys.exit()
-#         if event.type == pygame.KEYDOWN:
-#             player.attack()
-#
-#     # Drawing
-#     screen.fill((0, 0, 0))
-#     moving_sprites.draw(screen)
-#     moving_sprites.update(0.25)
-#     pygame.display.flip()
-#     clock.tick(60)

@@ -1,55 +1,75 @@
-import pygame, sys
-
-
-class Player(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.image = pygame.Surface((40, 40))
-        self.image.fill('red')
-        self.rect = self.image.get_rect(center=(300, 300))
-        self.mask = pygame.mask.from_surface(self.image)
-
-    def update(self):
-        if pygame.mouse.get_pos():
-            self.rect.center = pygame.mouse.get_pos()
-
-
-class Obstacle(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.image = pygame.image.load('C:\\Users\\PC\\PycharmProjects\\JetpackJoyride\\assets\\obstacles\\zap3.png').convert_alpha()
-        self.rect = self.image.get_rect(center=(400, 400))
-        self.mask = pygame.mask.from_surface(self.image)
-
-
-# pygame setup
-pygame.init()
-screen = pygame.display.set_mode((800, 800))
-clock = pygame.time.Clock()
-
-# group setup
-player = pygame.sprite.GroupSingle(Player())
-obstacle = pygame.sprite.GroupSingle(Obstacle())
-
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-
-    screen.fill('white')
-
-    # updating and drawing
-    player.update()
-    player.draw(screen)
-    obstacle.draw(screen)
-
-    # collision
-    if pygame.sprite.spritecollide(player.sprite, obstacle, False):
-        if pygame.sprite.spritecollide(player.sprite, obstacle, False, pygame.sprite.collide_mask):
-            player.sprite.image.fill('green')
-        else:
-            player.sprite.image.fill('red')
-
-    pygame.display.update()
-    clock.tick(60)
+# # import pygame module in this program
+# import pygame
+#
+# # activate the pygame library
+# # initiate pygame and give permission
+# # to use pygame's functionality.
+# pygame.init()
+#
+# # define the RGB value for white,
+# # green, blue colour .
+# white = (255, 255, 255)
+# green = (0, 255, 0)
+# blue = (0, 0, 128)
+#
+# # assigning values to X and Y variable
+# X = 400
+# Y = 400
+#
+# # create the display surface object
+# # of specific dimension..e(X, Y).
+# display_surface = pygame.display.set_mode((X, Y))
+#
+# # set the pygame window name
+# pygame.display.set_caption('Show Text')
+#
+# # create a font object.
+# # 1st parameter is the font file
+# # which is present in pygame.
+# # 2nd parameter is size of the font
+# font = pygame.font.Font('freesansbold.ttf', 32)
+#
+# # create a text surface object,
+# # on which text is drawn on it.
+# text = font.render('GeeksForGeeks', True, green, blue)
+#
+# # create a rectangular object for the
+# # text surface object
+# textRect = text.get_rect()
+#
+# # set the center of the rectangular object.
+# textRect.center = (X // 2, Y // 2)
+#
+# # infinite loop
+# while True:
+#
+#     # completely fill the surface object
+#     # with white color
+#     display_surface.fill(white)
+#
+#     # copying the text surface object
+#     # to the display surface object
+#     # at the center coordinate.
+#     display_surface.blit(text, textRect)
+#
+#     # iterate over the list of Event objects
+#     # that was returned by pygame.event.get() method.
+#     for event in pygame.event.get():
+#
+#         # if event object type is QUIT
+#         # then quitting the pygame
+#         # and program both.
+#         if event.type == pygame.QUIT:
+#             # deactivates the pygame library
+#             pygame.quit()
+#
+#             # quit the program.
+#             quit()
+#
+#         # Draws the surface object to the screen.
+#         pygame.display.update()
+import json
+data = {'High': '0',
+        'Money': '0'}
+json_object = json.dumps(data, indent = 4)
+print(json_object)
