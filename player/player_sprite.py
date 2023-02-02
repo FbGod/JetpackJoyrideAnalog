@@ -27,8 +27,6 @@ class Player(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
         self.rect.topleft = [pos_x, pos_y]
-
-        # вычисляем маску для эффективного сравнения
         self.mask = pygame.mask.from_surface(self.image)
 
     def run(self):
@@ -112,4 +110,3 @@ class Player(pygame.sprite.Sprite):
 
             self.image = self.sprites_end[int(self.current_sprite)]
             self.mask = pygame.mask.from_surface(self.image)
-

@@ -1,5 +1,3 @@
-import random
-
 import pygame
 
 
@@ -25,8 +23,6 @@ class Coin(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-
-        # вычисляем маску для эффективного сравнения
         self.mask = pygame.mask.from_surface(self.image)
 
     def update(self, speed, speed_sprite):
@@ -37,6 +33,3 @@ class Coin(pygame.sprite.Sprite):
         self.rect.x -= speed
         if self.rect.right < 0:
             self.kill()
-
-    # def spin(self):
-    #     self.spin_animation = True

@@ -38,6 +38,7 @@ print(os.path.abspath(os.curdir))
 os.chdir("..")
 print(os.path.abspath(os.curdir))
 
+# open game db file
 try:
     with open('db.txt') as score_file:
         data = json.load(score_file)
@@ -48,7 +49,7 @@ except:
                 'Money': '0'}
         json.dump(data, score_file)
 
-print(data)
+# loading bg
 
 bg = pygame.image.load("assets/background/4hurq0y5yms11.jpg").convert()
 bg = pygame.transform.scale(bg, (900, 600))
@@ -89,6 +90,7 @@ def generate_lasers():
 generate_lasers()
 
 
+# coin
 def create_coin():
     x, y = random.randrange(SCREEN_WIDTH + 100, SCREEN_WIDTH + 300), random.randrange(50, SCREEN_HEIGHT - 150)
     coin = Coin(x, y, scroll_bg_const)
@@ -102,6 +104,7 @@ def create_coin():
         return coin
 
 
+# score update
 def score():
     global scroll_bg_const, laser_sprites_upd_const, score_upgrade_const, points, white
     font = pygame.font.Font('assets/New_Athletic_M54.ttf', 32)
@@ -122,6 +125,7 @@ def score():
     screen.blit(text1, textRect1)
 
 
+# on coin collect
 def coin_collected(colided=False):
     global money_count
     font = pygame.font.Font('assets/New_Athletic_M54.ttf', 32)
@@ -133,6 +137,7 @@ def coin_collected(colided=False):
     screen.blit(text, textRect)
 
 
+# start screen
 def start_screen():
     pygame.init()
     global screen, clock
@@ -154,8 +159,9 @@ def start_screen():
         clock.tick(FPS)
 
 
+# after death
 def result_screen():
-    save_data()
+    save_data()  # -> save data
     print('Data saved')
     pygame.init()
     global money_count, run
@@ -166,8 +172,8 @@ def result_screen():
     textRect = text.get_rect()
     textRect.center = (450, 250)
     screen.blit(text, textRect)
-    text1 = font.render(f'Total money is {int(data["Money"]) + money_count}', True,
-        white)
+    text1 = font.render(f'Total money is {int(data["Money"])}', True,
+                        white)
     textRect1 = text.get_rect()
     textRect1.center = (390, 320)
     screen.blit(text1, textRect1)
@@ -181,6 +187,7 @@ def result_screen():
         clock.tick(FPS)
 
 
+# save data to db
 def save_data():
     if int(points) > int(data['High']):
         data['High'] = str(int(points))
@@ -190,16 +197,18 @@ def save_data():
         json.dump(data, score_file)
 
 
-
 run = True
 # game loop
 start_screen()
 
 
+# game correct stop
 def terminate():
     pygame.quit()
     sys.exit()
 
+
+# run game
 def run_game():
     global run, scroll_bg_const, laser_sprites_upd_const, scroll
     while run:

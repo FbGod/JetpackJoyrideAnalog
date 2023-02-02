@@ -1,5 +1,4 @@
 import random
-
 import pygame
 
 
@@ -23,8 +22,6 @@ class YellowLaser(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(SCREEN_WIDTH + 100, SCREEN_WIDTH + 300)
         self.rect.y = random.randrange(0 + self.rect.width, SCREEN_HEIGHT - SCREEN_HEIGHT // 5.3)
-
-        # вычисляем маску для эффективного сравнения
         self.mask = pygame.mask.from_surface(self.image)
 
     def update(self, speed):
